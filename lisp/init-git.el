@@ -1,7 +1,6 @@
 ;; TODO: link commits from vc-log to magit-show-commit
 ;; TODO: smerge-mode
 (require-package 'git-blame)
-(require-package 'git-commit)
 (require-package 'gitignore-mode)
 (require-package 'gitconfig-mode)
 (require-package 'git-messenger) ;; Though see also vc-annotate's "n" & "p" bindings
@@ -21,13 +20,15 @@
   (global-set-key (kbd "C-x M-g") 'magit-dispatch-popup))
 
 (after-load 'magit
-  (define-key magit-status-mode-map (kbd "C-M-<up>") 'magit-section-up))
+  (define-key magit-status-mode-map (kbd "C-M-<up>") 'magit-section-up)
+  (add-hook 'magit-popup-mode-hook 'sanityinc/no-trailing-whitespace))
 
 (require-package 'fullframe)
 (after-load 'magit
   (fullframe magit-status magit-mode-quit-window))
 
-(add-hook 'git-commit-mode-hook 'goto-address-mode)
+(when (maybe-require-package 'git-commit)
+  (add-hook 'git-commit-mode-hook 'goto-address-mode))
 
 
 (when *is-a-mac*
